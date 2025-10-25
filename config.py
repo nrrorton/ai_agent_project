@@ -1,0 +1,2 @@
+# config.py
+MAX_FILE_LENGTH = 10000
