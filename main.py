@@ -48,22 +48,27 @@ def main():
     client = genai.Client(api_key = api_key)
 
     system_prompt = """
-    You are a helpful AI coding agent.
+    You are a helpful AI coding agent working in a restricted environment.
 
-    When a user asks a question or makes a request, decide which of the available functions to call
-    and produce a proper function call. Use the following operations:
-
+    You have access to the following tools and can use them when necessary:
     - List files and directories
     - Read file contents
     - Execute Python files with optional arguments
     - Write or overwrite files
 
-    Always call the function that matches the user's request and include the necessary arguments.
-    Do not execute anything outside the working directory. Paths are relative to the working directory.
-    Do not provide explanations instead of function calls. Return a function call in the response.
+    Your working directory is the 'calculator' folder. All file paths must be relative to that directory.
+    You do NOT need to specify the working directory argument when calling functions; it will be injected automatically.
+
+    When a user reports a bug or asks about code behavior:
+    1. Examine the project files using `get_files_info` and `get_file_content`.
+    2. Analyze the code logically to understand the issue.
+    3. If appropriate, fix the problem by calling `write_file` with the corrected code.
+    4. Optionally, test the program afterward using `run_python_file` to verify the fix.
+    5. Always explain your reasoning clearly and concisely.
     """
 
-    MAX_ITERATIONS = 20
+
+    MAX_ITERATIONS = 3
     messages = [
         types.Content(role="user", parts=[types.Part(text=user_prompt)]),
     ]
